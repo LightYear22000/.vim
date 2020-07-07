@@ -1,0 +1,710 @@
+snippet dbgr "Debugger Tool" b
+
+vector<string> vec_splitter(string s) {
+		s += ',';
+		vector<string> res;
+		while(!s.empty()) {
+				res.push_back(s.substr(0, s.find(',')));
+				s = s.substr(s.find(',') + 1);
+		}
+		return res;
+}
+void debug_out(
+vector<string> __attribute__ ((unused)) args,
+__attribute__ ((unused)) int idx, 
+__attribute__ ((unused)) int LINE_NUM) { cerr << endl; } 
+template <typename Head, typename... Tail>
+void debug_out(vector<string> args, int idx, int LINE_NUM, Head H, Tail... T) {
+		if(idx > 0) cerr << ", "; else cerr << "Line(" << LINE_NUM << ") ";
+		stringstream ss; ss << H;
+		cerr << args[idx] << " = " << ss.str();
+		debug_out(args, idx + 1, LINE_NUM, T...);
+}
+#ifdef XOX
+#define deb(...) debug_out(vec_splitter(#__VA_ARGS__), 0, __LINE__, __VA_ARGS__)
+#else
+#define deb(...) 42
+#endif
+
+endsnippet
+
+snippet ashishanjan1t "Template with t" b
+
+
+#include <bits/stdc++.h>
+#define int long long 
+#define ll long long 
+#define ld long double
+using namespace std;
+const int INF = 1e18;
+const int MOD = 1e9 + 7;
+
+
+
+int32_t main() {
+	ios::sync_with_stdio(!cin.tie(NULL));
+		
+	int t;
+	cin >> t;
+	while(t--){
+		$0
+	}
+}
+
+endsnippet
+
+
+snippet ashishanjan1 "Normal Template" b
+
+
+
+#include <bits/stdc++.h>
+#define int long long 
+#define ll long long 
+#define ld long double
+using namespace std;
+const int INF = 1e18;
+const int MOD = 1e9 + 7;
+
+
+
+int32_t main() {
+	ios::sync_with_stdio(!cin.tie(NULL));
+
+	$0
+}
+
+endsnippet
+
+snippet fenwick-sum "Fenwick Tree for Sum Queries" b
+
+
+template<typename T>
+struct FenwickTree{
+    vector<T> bit;
+    int n;
+ 
+    FenwickTree(int num) : n(num), bit(num, (T)0){
+    }
+ 
+    T sum(int r){
+        T ans = (T)0;
+        while(r > 0){
+            ans += bit[r];
+            r = r&(r - 1);
+        }
+        return ans;
+    }
+ 
+    T sum(int l, int r){
+        return sum(r) - sum(l - 1);
+    }
+ 
+    void update(int pos, T delta){
+        while(pos < n){
+            bit[pos] += delta;
+            pos += pos&(-pos);
+        }
+    }
+ 
+    int lower_bound(T val){
+        int cur = 20, pos = 0;
+        T sum = 0;
+        while(cur >= 0){
+            deb(pos, cur, bit[pos], (1 << cur) - 1, val);
+            if((pos + (1 << cur)) < n and (sum + bit[pos + (1 << cur)]) < val)    deb(pos + (1 << cur), bit[pos + (1 << cur)]), sum += bit[pos + (1 << cur)], pos += (1 << cur);
+            cur--;
+        }
+        return pos + 1;
+    }
+ 
+    int upper_bound(T val){
+        return lower_bound(val + ((T)1));
+    }
+};
+
+endsnippet
+
+snippet aho-corasick "Aho Corasick Algorithm" b
+
+const int K = 26;
+
+string s;
+
+
+
+struct Vertex {
+
+        int next[K];
+
+        bool leaf = false;
+
+        int p = -1;
+
+        char pch;
+
+        int link = -1;
+
+        int go[K];
+
+        int exit = -1;
+
+        ll exit_cnt = 0;
+
+        bool done = false;
+
+
+
+        Vertex(int p=-1, char ch='$') : p(p), pch(ch) {
+
+            fill(begin(next), end(next), -1);
+
+            fill(begin(go), end(go), -1);
+
+        }
+
+};
+
+
+
+vector<Vertex> t(1);
+
+
+
+void add_string(string const& s, ll a) {
+
+    int v = 0;
+
+    int cnt = 0;
+
+    //t[0].exit = 0;
+
+    for (char ch : s) {
+
+        int c = ch - 'a';
+
+        if (t[v].next[c] == -1) {
+
+            t[v].next[c] = t.size();
+
+            t.emplace_back(v, ch);
+
+        }
+
+        cnt += t[v].leaf;
+
+        v = t[v].next[c];
+
+    }
+
+    t[v].leaf = true, t[v].exit_cnt += a;
+
+}
+
+int go(int v, char ch);
+
+
+
+int get_link(int v) {
+
+    if (t[v].link == -1) {
+
+        if (v == 0 || t[v].p == 0)
+
+            t[v].link = 0;
+
+        else
+
+            t[v].link = go(get_link(t[v].p), t[v].pch);
+
+    }
+
+    return t[v].link;
+
+}
+
+
+
+int go(int v, char ch) {
+
+    int c = ch - 'a';
+
+    if (t[v].go[c] == -1) {
+
+        if (t[v].next[c] != -1)
+
+            t[v].go[c] = t[v].next[c];
+
+        else
+
+            t[v].go[c] = v == 0 ? 0 : go(get_link(v), ch);
+
+    }
+
+    return t[v].go[c];
+
+}
+
+
+
+int get_exit_link(int v) {
+
+    if (t[v].exit == -1) {
+
+        if(t[get_link(v)].leaf)
+
+            t[v].exit = get_link(v);
+
+        else {
+
+            t[v].exit = (v == 0) ? 0 : t[get_link(v)].exit;
+
+        }
+
+    }
+
+    return t[v].exit;
+
+}
+
+
+
+// This function returns the number of exit-strings ending at a particular state only and NOT throughout the course of
+
+// reaching that state. Make a seperate function for that !
+
+ll get_exit_cnt(int v) {
+
+    if (!t[v].done) {
+
+        t[v].done = true;
+
+        t[v].exit_cnt += get_exit_cnt(get_link(v));
+
+    }
+
+    return t[v].exit_cnt;
+
+}
+
+endsnippet
+
+snippet kmp "Prefix Function (KMP Algorithm)" b
+
+vector<int> prefix_function(string s) {
+    int n = (int)s.length();
+    vector<int> pi(n);
+    for (int i = 1; i < n; i++) {
+        int j = pi[i-1];
+        while (j > 0 && s[i] != s[j])
+            j = pi[j-1];
+        if (s[i] == s[j])
+            j++;
+        pi[i] = j;
+    }
+    return pi;
+}
+
+endsnippet
+
+snippet suffix-array "Suffix Array" b
+
+vector<int> sort_cyclic_shifts(string s) {
+
+    s += "$";
+
+    int n = s.size();
+
+    const int alphabet = 256;
+
+    vector<int> p(n), c(n), cnt(max(alphabet, n), 0);
+
+    for (int i = 0; i < n; i++)
+
+        cnt[s[i]]++;
+
+    for (int i = 1; i < alphabet; i++)
+
+        cnt[i] += cnt[i-1];
+
+    for (int i = 0; i < n; i++)
+
+        p[--cnt[s[i]]] = i;
+
+    c[p[0]] = 0;
+
+    int classes = 1;
+
+    for (int i = 1; i < n; i++) {
+
+        if (s[p[i]] != s[p[i-1]])
+
+            classes++;
+
+        c[p[i]] = classes - 1;
+
+    }
+
+    vector<int> pn(n), cn(n);
+
+    for (int h = 0; (1 << h) < n; ++h) {
+
+        for (int i = 0; i < n; i++) {
+
+            pn[i] = p[i] - (1 << h);
+
+            if (pn[i] < 0)
+
+                pn[i] += n;
+
+        }
+
+        fill(cnt.begin(), cnt.begin() + classes, 0);
+
+        for (int i = 0; i < n; i++)
+
+            cnt[c[pn[i]]]++;
+
+        for (int i = 1; i < classes; i++)
+
+            cnt[i] += cnt[i-1];
+
+        for (int i = n-1; i >= 0; i--)
+
+            p[--cnt[c[pn[i]]]] = pn[i];
+
+        cn[p[0]] = 0;
+
+        classes = 1;
+
+        for (int i = 1; i < n; i++) {
+
+            pair<int, int> cur = {c[p[i]], c[(p[i] + (1 << h)) % n]};
+
+            pair<int, int> prev = {c[p[i-1]], c[(p[i-1] + (1 << h)) % n]};
+
+            if (cur != prev)
+
+                ++classes;
+
+            cn[p[i]] = classes - 1;
+
+        }
+
+        c.swap(cn);
+
+    }
+
+    return p;
+
+}
+
+
+
+vector<int> lcp_construction(string s, vector<int> const& p) {
+
+    s += "$";
+
+    int n = s.size();
+
+    vector<int> rank(n, 0);
+
+    for (int i = 0; i < n; i++)
+
+        rank[p[i]] = i;
+
+
+
+    int k = 0;
+
+    vector<int> lcp(n-1, 0);
+
+    for (int i = 0; i < n; i++) {
+
+        if (rank[i] == n - 1) {
+
+            k = 0;
+
+            continue;
+
+        }
+
+        int j = p[rank[i] + 1];
+
+        while (i + k < n && j + k < n && s[i+k] == s[j+k])
+
+            k++;
+
+        lcp[rank[i]] = k;
+
+        if (k)
+
+            k--;
+
+    }
+
+    return lcp;
+
+}
+
+endsnippet
+
+snippet linear-sieve "Linear Sieve" b
+
+const int N = 10000000;
+int lp[N+1];
+vector<int> pr;
+
+for (int i=2; i<=N; ++i) {
+    if (lp[i] == 0) {
+        lp[i] = i;
+        pr.push_back (i);
+    }
+    for (int j=0; j<(int)pr.size() && pr[j]<=lp[i] && i*pr[j]<=N; ++j)
+        lp[i * pr[j]] = pr[j];
+}
+
+endsnippet
+
+snippet fft-multiply "Fast Fourier Transform" 
+
+template<class T>
+class FFTSolver {
+    using Complex = complex<double>;
+    const double kPi = 4.0 * atan(1.0);
+
+    int __lg(int n) { return n == 1 ? 0 : 1 + __lg(n / 2);  }
+
+    int rev_bit(int num, int lg) {
+        int ret = 0;
+        for (int i = 0; i < lg; ++i)
+            if (num & (1 << i))
+                ret |= (1 << (lg - i - 1));
+        return ret;
+    }
+
+    vector<Complex> fft(vector<Complex> V, bool invert) {
+        int n = V.size(), lg = __lg(n);
+
+        for (int i = 0; i < n; ++i) {
+            int rev = rev_bit(i, lg);
+            if (i < rev)
+              swap(V[i], V[rev]);
+        }
+
+        for (int step = 2; step <= n; step *= 2) {
+            const double ang = 2 * kPi / step;
+            Complex eps(cos(ang), sin(ang));
+            if (invert) eps = conj(eps);
+
+            for (int i = 0; i < n; i += step) {
+                Complex w = 1;
+                for (int a = i, b = i + step / 2; b < i + step; ++a, ++b) {
+                    Complex aux = w * V[b];
+                    V[b] = V[a] - aux;
+                    V[a] = V[a] + aux;
+                    w *= eps;
+                }
+            }
+        }
+
+        return V;
+    }
+
+    vector<Complex> transform(vector<Complex> V) {
+        int n = V.size();
+        vector<Complex> ret(n);
+        Complex div_x = Complex(0, 1) * (4.0 * n);
+
+        for (int i = 0; i < n; ++i) {
+            int j = (n - i) % n;
+            ret[i] = (V[i] + conj(V[j]))
+                * (V[i] - conj(V[j]))
+                / div_x;
+        }
+
+        return ret;
+    }
+
+  public:
+    vector<T> Multiply(vector<T> A, vector<T> B) {
+        int n = A.size() + B.size() - 1;
+        vector<T> ret(n);
+        while (n != (n & -n)) ++n;
+
+        A.resize(n); B.resize(n);
+        vector<Complex> V(n);
+        for (int i = 0; i < n; ++i) {
+            V[i] = Complex(A[i], B[i]);
+        }
+
+        V = fft(V, false);
+        V = transform(V);
+        V = fft(V, true);
+
+        for (int i = 0; i < (int)ret.size(); ++i)
+            ret[i] = round(real(V[i]));
+        return ret;
+    }
+};
+
+endsnippet
+
+snippet convex-hull-trick "CHT" b
+struct Line {
+	mutable ll k, m, p;
+	bool operator<(const Line& o) const { return k < o.k; }
+	bool operator<(ll x) const { return p < x; }
+};
+
+struct LineContainer : multiset<Line, less<>> {
+	// (for doubles, use inf = 1/.0, div(a,b) = a/b)
+	const ll inf = LLONG_MAX;
+	ll div(ll a, ll b) { // floored division
+		return a / b - ((a ^ b) < 0 && a % b); }
+	bool isect(iterator x, iterator y) {
+		if (y == end()) { x->p = inf; return false; }
+		if (x->k == y->k) x->p = x->m > y->m ? inf : -inf;
+		else x->p = div(y->m - x->m, x->k - y->k);
+		return x->p >= y->p;
+	}
+	void add(ll k, ll m) {
+		auto z = insert({k, m, 0}), y = z++, x = y;
+		while (isect(y, z)) z = erase(z);
+		if (x != begin() && isect(--x, y)) isect(x, y = erase(y));
+		while ((y = x) != begin() && (--x)->p >= y->p)
+			isect(x, erase(y));
+	}
+	ll query(ll x) {
+		assert(!empty());
+		auto l = *lower_bound(x);
+		return l.k * x + l.m;
+	}
+};
+
+endsnippet
+
+snippet LCA "Lowest Common Ancestor"
+
+int up[300000][21];
+int depth[3000000];
+vector<vector<int>> edges;
+int l = 20;
+void dfs(int u, int par = -1){
+	if(par == -1){
+		depth[u] = 0;
+		up[u][0] = u;
+	}
+	else{
+		depth[u] = depth[par] + 1;
+		up[u][0] = par;
+	}
+
+	for(int i = 1; i < l; i++){
+		up[u][i] = up[up[u][i-1]][i-1];
+	}
+
+	for(auto v : edges[u]){
+		if(v != par){
+			dfs(v, u);
+		}
+	}
+}
+
+int lca(int u, int v){
+	if(depth[u] < depth[v])	swap(u, v);
+	int dist = depth[u] - depth[v];
+	for(int i = 0; i < l; i++)	if(dist&(1 << i))	u = up[u][i];
+	if(u == v)	return u;
+
+	for(int i = l-1; i >= 0; i--){
+		if(up[u][i] != up[v][i])	u = up[u][i], v = up[v][i];
+	}
+
+	return up[u][0];
+}
+
+int dist(int u, int v){
+	int w = lca(u, v);
+	return depth[u] + depth[v] - (2 * depth[w]);
+}
+
+endsnippet 
+
+snippet modular "Modular Arithmetic"
+
+
+struct mint {
+  ll x;
+  mint():x(0){}
+  mint(ll x):x((x%MOD+MOD)%MOD){}
+  // mint(ll x):x(x){}
+  mint& fix() { x = (x%MOD+MOD)%MOD; return *this;}
+  mint operator-() const { return mint(0) - *this;}
+  mint operator~() const { return mint(1) / *this;}
+  mint& operator+=(const mint& a){ if((x+=a.x)>=MOD) x-=MOD; return *this;}
+  mint& operator+=(const int& a){ if((x+=a)>=MOD) x-=MOD; return *this;}
+  mint& operator+=(const ll& a){ if((x+=a)>=MOD) x-=MOD; return *this;}
+  mint& operator-=(const mint& a){ if((x+=MOD-a.x)>=MOD) x-=MOD; return *this;}
+  mint& operator-=(const ll& a){ if((x+=MOD-a)>=MOD) x-=MOD; return *this;}
+  mint& operator-=(const int& a){ if((x+=MOD-a)>=MOD) x-=MOD; return *this;}
+  mint& operator*=(const mint& a){ (x*=a.x)%=MOD; return *this;}
+  mint& operator*=(const ll& a){ (x*=a)%=MOD; return *this;}
+  mint& operator*=(const int& a){ (x*=a)%=MOD; return *this;}
+  mint& operator/=(const mint& a){ (x*=a.ex(MOD-2).x)%=MOD; return *this;}
+  mint operator+(const mint& a)const{ return mint(*this) += a;}
+  mint operator+(const ll& a)const{ return mint(*this) += mint(a);}
+  mint operator+(const int& a)const{ return mint(*this) += mint(a);}
+  mint operator-(const mint& a)const{ return mint(*this) -= a;}
+  mint operator-(const ll& a)const{ return mint(*this) -= mint(a);}
+  mint operator-(const int& a)const{ return mint(*this) -= mint(a);}
+  mint operator*(const mint& a)const{ return mint(*this) *= a;}
+  mint operator*(const ll& a)const{ return mint(*this) *= mint(a);}
+  mint operator*(const int& a)const{ return mint(*this) *= mint(a);}
+  mint operator/(const mint& a)const{ return mint(*this) /= a;}
+  mint operator/(const ll& a)const{ return mint(*this) /= mint(a);}
+  mint operator/(const int& a)const{ return mint(*this) /= mint(a);}
+  mint& operator=(const ll&a){ this->x = a; return (*this);}
+  mint& operator=(const int&a){ this->x = a; return (*this);}
+  mint ex(ll t) const {
+    if(!t) return 1;
+    mint res = ex(t/2);
+    res *= res;
+    return (t&1)?res*x:res;
+  }
+  bool operator<(const mint& a)const{ return x < a.x;}
+  bool operator==(const mint& a)const{ return x == a.x;}
+  bool operator!=(const mint& a)const{ return x != a.x;}
+};
+
+mint ex(mint x, ll t) { return x.ex(t);}
+mint operator/(ll a, mint b)    {   return mint(a) / b; }
+mint operator*(ll a, mint b)    {   return mint(a) * b; }
+mint operator+(ll a, mint b)    {   return mint(a) + b; }
+mint operator-(ll a, mint b)    {   return mint(a) - b; }
+istream& operator>>(istream&i,mint&a){i>>a.x;return i;}
+ostream& operator<<(ostream&o,const mint&a){o<<a.x % MOD;return o;}
+
+endsnippet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
