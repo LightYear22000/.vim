@@ -1,0 +1,1 @@
+/home/ashishanjan/.vimrc
