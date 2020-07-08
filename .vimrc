@@ -4,6 +4,7 @@
 :set autoindent
 :set incsearch
 :set smartcase
+:set noswapfile
 :set nowrap
 :set colorcolumn=80
 :set tabstop=4 softtabstop=4
@@ -19,6 +20,7 @@ Plug 'ervandew/supertab'
 Plug 'Valloric/YouCompleteMe'
 Plug 'git@github.com:SirVer/ultisnips.git'
 Plug 'honza/vim-snippets'
+Plug 'ThePrimeagen/vim-be-good'
 call plug#end()
 
 colorscheme gruvbox
