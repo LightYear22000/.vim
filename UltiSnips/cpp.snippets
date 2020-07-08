@@ -1,3 +1,25 @@
+snippet DSU "Disjoint Set Union" b
+
+
+struct DSU{
+	vector<int> par, sz;
+
+	DSU(int n) : par(n + 1, -1), sz(n + 1, 1){
+	}
+	
+	int fnd(int u){
+		return (par[u] == -1) ? u : (par[u] = fnd(par[u]);
+	}
+
+	void un(int u, int v){
+		u = fnd(u), v = fnd(v)
+		if(u == v)	return;
+		par[u] = v;
+		sz[v] += sz[u]
+	}
+};
+endsnippet
+
 snippet dbgr "Debugger Tool" b
 
 vector<string> vec_splitter(string s) {
