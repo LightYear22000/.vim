@@ -119,3 +119,4 @@ export PATH=$PATH:~/.local/bin
 alias pip='pip3'
 alias codeS='cd ~/Desktop/CodeS'
 alias err='cat error.txt'
+alias out='cat Output.txt'
