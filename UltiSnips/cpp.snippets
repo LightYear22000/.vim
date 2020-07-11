@@ -728,11 +728,46 @@ ostream& operator<<(ostream&o,const mint&a){o<<a.x % MOD;return o;}
 
 endsnippet
 
+snippet topcoder "TopCoder Template" b
 
+#include <bits/stdc++.h>
+#define ll long long
+#define ld long double
+using namespace std;
+const ll INF = 1e18;
+const ll MOD = 998244353;
 
+class something {
+	public:
+		$0int func() {
+		}
+};
 
+int32_t main() {
+	
+}
+endsnippet
 
+snippet combinatorics "Combinatorial function" b
 
+mint fact[1000000], rfact[1000000];
+void calc(int n = 100000) {
+	fact[0] = 1, rfact[0] = 1;
+	for(int i = 1; i < n; i++) {
+		fact[i] = fact[i - 1] * i;
+		rfact[i] = 1 / fact[i];
+	}
+}
+
+mint C(int n, int k) {
+	if(n < k)	return 0;
+	mint res = 1;
+	res *= fact[n];
+	res *= rfact[k];
+	res *= rfacr[n - k];
+	return res;
+}
+endsnippet
 
 
 
