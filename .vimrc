@@ -15,6 +15,7 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 inoremap ;; <Esc>
 
 call plug#begin('~/.vim/plugged')
+Plug 'preservim/nerdtree'
 Plug 'morhetz/gruvbox'
 Plug 'ervandew/supertab' 
 Plug 'Valloric/YouCompleteMe'
