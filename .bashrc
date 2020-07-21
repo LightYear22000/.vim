@@ -117,7 +117,7 @@ if ! shopt -oq posix; then
 fi
 export PATH=$PATH:~/.local/bin
 alias pip='pip3'
-alias codeS='cd ~/Desktop/CodeS'
+alias codeS='cd ~/Desktop/codeS'
 alias err='cat error.txt'
 alias out='cat Output.txt'
 alias cls='clear'

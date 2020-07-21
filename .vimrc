@@ -21,6 +21,7 @@ Plug 'ervandew/supertab'
 Plug 'Valloric/YouCompleteMe'
 Plug 'git@github.com:SirVer/ultisnips.git'
 Plug 'honza/vim-snippets'
+Plug 'preservim/nerdcommenter'
 Plug 'ThePrimeagen/vim-be-good'
 call plug#end()
 

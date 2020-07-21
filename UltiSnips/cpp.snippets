@@ -443,9 +443,7 @@ vector<int> sort_cyclic_shifts(string s) {
 
 
 vector<int> lcp_construction(string s, vector<int> const& p) {
-
-    s += "$";
-
+	s += '$';
     int n = s.size();
 
     vector<int> rank(n, 0);
@@ -801,6 +799,174 @@ struct SparseTable {
 endsnippet
 
 
+snippet aho-corasick-struct " " b
+const int K = 26;
+
+string s;
+
+
+
+struct Vertex {
+
+	int next[K];
+
+	bool leaf = false;
+
+	int p = -1;
+
+	char pch;
+
+	int link = -1;
+
+	int go[K];
+
+	int exit = -1;
+
+	ll exit_cnt = 0;
+
+	bool done = false;
+
+
+
+	Vertex(int p=-1, char ch='$') : p(p), pch(ch) {
+
+		fill(begin(next), end(next), -1);
+
+		fill(begin(go), end(go), -1);
+
+	}
+
+};
+
+
+
+struct trie {
+	vector<Vertex> t;
+	int l = 17;
+
+	trie() : t(1) {
+	}
+
+	void add_string(string const& s, ll a) {
+
+		int v = 0;
+
+		int cnt = 0;
+
+		//t[0].exit = 0;
+
+		for (char ch : s) {
+
+			int c = ch - 'a';
+
+			if (t[v].next[c] == -1) {
+
+				t[v].next[c] = t.size();
+
+				t.emplace_back(v, ch);
+
+			}
+
+			cnt += t[v].leaf;
+
+			v = t[v].next[c];
+
+		}
+
+		t[v].leaf = true, t[v].exit_cnt += a;
+
+	}
+
+
+
+	//int go(int v, char ch);
+
+	int get_link(int v) {
+
+		if (t[v].link == -1) {
+
+			if (v == 0 || t[v].p == 0)
+
+				t[v].link = 0;
+
+			else
+
+				t[v].link = go(get_link(t[v].p), t[v].pch);
+
+		}
+
+		return t[v].link;
+
+	}
+
+
+
+	int go(int v, char ch) {
+
+		int c = ch - 'a';
+
+		if (t[v].go[c] == -1) {
+
+			if (t[v].next[c] != -1)
+
+				t[v].go[c] = t[v].next[c];
+
+			else
+
+				t[v].go[c] = v == 0 ? 0 : go(get_link(v), ch);
+
+		}
+
+		return t[v].go[c];
+
+	}
+
+
+
+	int get_exit_link(int v) {
+
+		if (t[v].exit == -1) {
+
+			if(t[get_link(v)].leaf)
+
+				t[v].exit = get_link(v);
+
+			else {
+
+				t[v].exit = (v == 0) ? 0 : t[get_link(v)].exit;
+
+			}
+
+		}
+
+		return t[v].exit;
+
+	}
+
+
+
+	// This function returns the number of exit-strings ending at a particular state only and NOT throughout the course of
+
+	// reaching that state. Make a seperate function for that !
+
+	ll get_exit_cnt(int v) {
+
+		if (!t[v].done) {
+
+			t[v].done = true;
+
+			t[v].exit_cnt += get_exit_cnt(get_link(v));
+
+		}
+
+		return t[v].exit_cnt;
+
+	}
+};
+
+
+
+endsnippet
 
 
 
