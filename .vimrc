@@ -5,6 +5,7 @@
 :set incsearch
 :set smartcase
 :set noswapfile
+:set relativenumber
 :set nowrap
 :set colorcolumn=80
 :set tabstop=4 softtabstop=4
@@ -18,11 +19,12 @@ call plug#begin('~/.vim/plugged')
 Plug 'preservim/nerdtree'
 Plug 'morhetz/gruvbox'
 Plug 'ervandew/supertab' 
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 Plug 'git@github.com:SirVer/ultisnips.git'
 Plug 'honza/vim-snippets'
 Plug 'preservim/nerdcommenter'
 Plug 'ThePrimeagen/vim-be-good'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 colorscheme gruvbox

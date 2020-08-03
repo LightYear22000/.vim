@@ -121,3 +121,5 @@ alias codeS='cd ~/Desktop/codeS'
 alias err='cat error.txt'
 alias out='cat Output.txt'
 alias cls='clear'
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
