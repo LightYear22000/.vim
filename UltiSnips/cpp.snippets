@@ -129,23 +129,19 @@ struct FenwickTree{
     }
  
     T sum(int r){
-        T ans = (T)0;
-        while(r > 0){
-            ans += bit[r];
-            r = r&(r - 1);
-        }
-        return ans;
+		T ret = 0;
+        for (; r >= 0; r = (r & (r + 1)) - 1)
+            ret += bit[r];
+        return ret;
     }
  
     T sum(int l, int r){
         return sum(r) - sum(l - 1);
     }
  
-    void update(int pos, T delta){
-        while(pos < n){
-            bit[pos] += delta;
-            pos += pos&(-pos);
-        }
+    void update(int idx, T delta){
+		for (; idx < n; idx = idx | (idx + 1))
+            bit[idx] += delta;
     }
  
     int lower_bound(T val){
