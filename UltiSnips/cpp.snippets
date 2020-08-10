@@ -1,5 +1,19 @@
-snippet DSU "Disjoint Set Union" b
+snippet oset "Ordered Set" b
 
+
+#include <ext/pb_ds/detail/standard_policies.hpp>
+
+template<typename T>
+using ordered_set = tree<
+T,
+null_type,
+less<T>,
+rb_tree_tag,
+tree_order_statistics_node_update>;
+
+endsnippet
+
+snippet DSU "Disjoint Set Union" b
 
 struct DSU{
 	vector<int> par, sz;
