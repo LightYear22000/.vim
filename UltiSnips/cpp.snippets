@@ -1,6 +1,39 @@
+snippet merge-sort-tree "Merge Sort Tree" b
+
+struct segTree {
+	vector<vector<int>> t;
+	int n;
+	vector<int> a;
+	segTree(vector<int> &arr) : a(arr){
+		n = (int)arr.size();
+		t.resize(4*n + 10);
+	}
+
+	void build(int v, int tl, int tr) {
+		if(tl > tr) return;
+		else if(tl == tr)	t[v].push_back(a[tl]);
+		else {
+			int tm = (tl + tr) / 2;
+			build(v*2, tl, tm), build(v*2 + 1, tm + 1, tr);
+			t[v].resize(tr - tl + 1);
+			merge(t[v*2].begin(), t[v*2].end(), t[v*2 + 1].begin(), t[v*2 + 1].end(), t[v].begin());
+		}
+	}
+
+	int query(int v, int tl, int tr, int l, int r, int val) {
+		if(l > r or tl > tr) return 0;
+		else if(tl == l and tr == r) {
+			return (tr - tl + 1) - (lower_bound(t[v].begin(), t[v].end(), val) - t[v].begin());
+		}
+		else {
+			int tm = (tl + tr) / 2;
+			return query(v*2, tl, tm, l, min(tm, r), val) + query(v*2 + 1, tm + 1, tr, max(tm + 1, l), r, val);
+		}
+	}
+};
+
+endsnippet
 snippet oset "Ordered Set" b
-
-
 #include <ext/pb_ds/detail/standard_policies.hpp>
 
 template<typename T>
@@ -772,7 +805,7 @@ mint C(int n, int k) {
 	mint res = 1;
 	res *= fact[n];
 	res *= rfact[k];
-	res *= rfacr[n - k];
+	res *= rfact[n - k];
 	return res;
 }
 endsnippet
