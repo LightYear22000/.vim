@@ -1,3 +1,62 @@
+snippet persistentSegTree "Persistent Segment Tree" b
+
+struct node {
+	int l, r, val;
+};
+
+struct PersistentST {
+	int cur = 0;
+	node t[6000000];
+
+	int build(int tl, int tr) {
+		if(tl == tr)	return t[cur++].val = 0, cur - 1;
+		else {
+			int tm = (tl + tr) / 2;
+			int now = cur++;
+			t[now].l = build(tl, tm);
+			t[now].r = build(tm + 1, tr);
+			t[now].val = t[t[now].l].val + t[t[now].r].val;
+			return now;
+		}
+	}
+
+	// v here is the head pointer pointing to the latest version of the segmentTree
+	int update(int v, int tl, int tr, int pos, int val = 1) {
+		if(tl == tr) return t[cur++].val = val,cur - 1;
+		else {
+			int now = cur++;
+			int tm = (tl + tr) /2 ;
+			int l = t[v].l, r = t[v].r;
+			if(pos <= tm)	l = update(l, tl, tm, pos);
+			else	r = update(r, tm + 1, tr, pos);
+			t[now].l = l, t[now].r = r;
+			t[now].val = t[l].val + t[r].val;
+			return now;
+		}
+	}
+	
+	// v here is the head pointer pointing to the latest version of the segmentTree
+	int query(int v, int tl, int tr, int l, int r) {
+		if(l > r) return 0;
+		else if(tl == l and tr == r) return t[v].val;
+		else {
+			int tm = (tl + tr) / 2;
+			return query(t[v].l, tl, tm, l, min(tm, r)) + query(t[v].r, tm + 1, tr, max(tm + 1, l), r);
+		}
+	}
+};
+
+// head stores the root node of the segment tree at different points of time
+int head[100010];
+
+endsnippet
+
+snippet fileInput "fileInput" b
+	freopen("$0", "r", stdin);
+	freopen("", "w", stdout);
+endsnippet
+
+
 snippet merge-sort-tree "Merge Sort Tree" b
 
 struct segTree {

@@ -16,6 +16,7 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 inoremap ;; <Esc>
 
 call plug#begin('~/.vim/plugged')
+Plug 'drewtempelmeyer/palenight.vim'
 Plug 'preservim/nerdtree'
 Plug 'morhetz/gruvbox'
 Plug 'ervandew/supertab' 
@@ -25,10 +26,12 @@ Plug 'honza/vim-snippets'
 Plug 'preservim/nerdcommenter'
 Plug 'ThePrimeagen/vim-be-good'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'davidhalter/jedi-vim'
 call plug#end()
 
-colorscheme gruvbox
-:set bg=dark
+" Options include : PaleNight, Gruvbox, SolarizedDark
+set background=dark
+colorscheme palenight
 
 " make YCM compatible with UltiSnips (using supertab)
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
@@ -69,3 +72,7 @@ noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<
 let g:ycm_clangd_uses_ycmd_caching = 0
 " Use installed clangd, not YCM-bundled clangd which doesn't get updates.
 let g:ycm_clangd_binary_path = exepath("clangd")
+
+"The first line ensures that the auto-complete window goes away when you’re done with it, and the second defines a shortcut for goto definition.
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
