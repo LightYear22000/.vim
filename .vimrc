@@ -25,7 +25,6 @@ Plug 'git@github.com:SirVer/ultisnips.git'
 Plug 'honza/vim-snippets'
 Plug 'preservim/nerdcommenter'
 Plug 'ThePrimeagen/vim-be-good'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'davidhalter/jedi-vim'
 call plug#end()
 
