@@ -586,6 +586,9 @@ void __print(unsigned long x) {cerr << x;}
 void __print(unsigned long long x) {cerr << x;}
 void __print(float x) {cerr << x;}
 void __print(double x) {cerr << x;}
+#ifdef MODULAR
+void __print(mint x) {cerr << x;}
+#endif
 void __print(long double x) {cerr << x;}
 void __print(char x) {cerr << '\'' << x << '\'';}
 void __print(const char *x) {cerr << '\"' << x << '\"';}
@@ -1254,7 +1257,7 @@ endsnippet
 
 snippet modular "Modular Arithmetic"
 
-
+#define MODULAR
 struct mint {
   ll x;
   mint():x(0){}
