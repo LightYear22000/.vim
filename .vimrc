@@ -30,7 +30,7 @@ call plug#end()
 
 " Options include : PaleNight, Gruvbox, SolarizedDark
 set background=dark
-colorscheme palenight
+colorscheme gruvbox
 
 " make YCM compatible with UltiSnips (using supertab)
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']

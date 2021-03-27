@@ -602,7 +602,7 @@ void _print() {cerr << "]\n";}
 template <typename T, typename... V>
 void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v...);}
 #ifdef XOX
-#define deb(x...) cerr << "Line (" << __LINE__ << ") : " << "[" << #x << "] = ["; _print(x)
+#define deb(x...) cerr << "Line (" << __LINE__ << ") : " << "[" << #x << "] = [", _print(x)
 #else
 #define deb(x...)
 #endif
@@ -640,6 +640,7 @@ endsnippet
 snippet gcj "Google Code Jam Template" b
 #include <bits/stdc++.h>
 #define ll long long 
+#define int long long 
 #define ld long double
 using namespace std;
 const ll INF = 1e18;
@@ -673,6 +674,9 @@ const ll INF = 1e18;
 const ll MOD = 998244353;
 
 
+void solve() {
+$0
+}
 
 int32_t main() {
 	ios::sync_with_stdio(!cin.tie(NULL));
@@ -680,7 +684,7 @@ int32_t main() {
 	int t;
 	cin >> t;
 	while(t--){
-		$0
+	solve();
 	}
 }
 
@@ -696,12 +700,14 @@ using namespace std;
 const ll INF = 1e18;
 const ll MOD = 998244353;
 
-
+void solve() {
+$0
+}
 
 int32_t main() {
 	ios::sync_with_stdio(!cin.tie(NULL));
 
-	$0
+	solve();
 }
 
 endsnippet
@@ -1257,6 +1263,7 @@ endsnippet
 
 snippet modular "Modular Arithmetic"
 
+#undef int long long
 #define MODULAR
 struct mint {
   ll x;
@@ -1308,6 +1315,7 @@ mint operator+(ll a, mint b)    {   return mint(a) + b; }
 mint operator-(ll a, mint b)    {   return mint(a) - b; }
 istream& operator>>(istream&i,mint&a){i>>a.x;return i;}
 ostream& operator<<(ostream&o,const mint&a){o<<a.x % MOD;return o;}
+#define int long long
 
 endsnippet
 
