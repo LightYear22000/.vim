@@ -579,32 +579,15 @@ struct DSU{
 endsnippet
 
 snippet dbgr "Debugger Tool" b
-void __print(int x) {cerr << x;}
-void __print(long x) {cerr << x;}
-void __print(unsigned x) {cerr << x;}
-void __print(unsigned long x) {cerr << x;}
-void __print(unsigned long long x) {cerr << x;}
-void __print(float x) {cerr << x;}
-void __print(double x) {cerr << x;}
-#ifdef MODULAR
-void __print(mint x) {cerr << x;}
-#endif
-void __print(long double x) {cerr << x;}
-void __print(char x) {cerr << '\'' << x << '\'';}
-void __print(const char *x) {cerr << '\"' << x << '\"';}
-void __print(const string &x) {cerr << '\"' << x << '\"';}
-void __print(bool x) {cerr << (x ? "true" : "false");}
-template<typename T, typename V>
-void __print(const pair<T, V> &x) {cerr << '{'; __print(x.first); cerr << ','; __print(x.second); cerr << '}';}
-template<typename T>
-void __print(const T &x) {int f = 0; cerr << '{'; for (auto &i: x) cerr << (f++ ? "," : ""), __print(i); cerr << "}";}
-void _print() {cerr << "]\n";}
-template <typename T, typename... V>
-void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v...);}
+template<typename A, typename B> ostream& operator<<(ostream &os, const pair<A, B> &p) { return os << '(' << p.first << ", " << p.second << ')'; }
+template<typename T_container, typename T = typename enable_if<!is_same<T_container, string>::value, typename T_container::value_type>::type> ostream& operator<<(ostream &os, const T_container &v) { os << '{'; string sep; for (const T &x : v) os << sep << x, sep = ", "; return os << '}'; }
+ 
+void dbg_out() { cerr << endl; }
+template<typename Head, typename... Tail> void dbg_out(Head H, Tail... T) { cerr << ' ' << H; dbg_out(T...); }
 #ifdef XOX
-#define deb(x...) cerr << "Line (" << __LINE__ << ") : " << "[" << #x << "] = [", _print(x)
+#define deb(...) cerr << "(" << #__VA_ARGS__ << "):", dbg_out(__VA_ARGS__)
 #else
-#define deb(x...)
+#define deb(...)
 #endif
 endsnippet
 
@@ -1342,7 +1325,7 @@ endsnippet
 snippet combinatorics "Combinatorial function" b
 
 mint fact[1000000], rfact[1000000];
-void calc(int n = 100000) {
+void calc(int n = 1000000) {
 	fact[0] = 1, rfact[0] = 1;
 	for(int i = 1; i < n; i++) {
 		fact[i] = fact[i - 1] * i;
