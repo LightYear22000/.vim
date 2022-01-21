@@ -1,3 +1,27 @@
+snippet usaco "USACO template" b
+
+#include <bits/stdc++.h>
+#define ll long long 
+#define ld long double
+#define int long long
+using namespace std;
+const ll INF = 1e18;
+const ll MOD = 998244353;
+
+void solve() {
+
+}
+
+int32_t main() {
+	ios::sync_with_stdio(!cin.tie(NULL));
+	freopen("", "r", stdin);
+	freopen("", "w", stdout);
+
+	solve();
+}
+
+endsnippet
+
 snippet bigInt "Big Integer" b
 const int maxn = 1e2 + 14, lg = 15;
 
@@ -411,8 +435,12 @@ endsnippet
 snippet lazySegmentTree "Lazy Segment Tree" b
 
 struct LazySegTree {
-	int t[1000000];
-	int lazy[1000000];
+	vector<int> t;
+	vector<int> lazy;
+
+	LazySegTree(int n): t(4*n + 10, 0), lazy(4*n + 10, 0) {
+	}
+
 	void push(int v, int tl, int tr) {
 		int tm = (tl + tr) / 2;
 		t[v*2] += (lazy[v] * (tm - tl + 1));
@@ -428,14 +456,12 @@ struct LazySegTree {
 			int tmp = t[v];
 			t[v] += (val * (tr - tl + 1));
 			lazy[v] += val;
-			deb(t[v], tl, tr, tmp, lazy[v]);
 		}
 		else {
 			int tm = (tl + tr) / 2;
 			push(v, tl, tr);
 			update(v*2, tl,tm, l, min(r, tm),val), update(v*2 + 1, tm + 1, tr, max(tm + 1, l), r, val);
 			t[v] = t[v*2] + t[v*2 + 1];
-			deb(t[v], tl, tr);
 		}
 	}
 
@@ -545,16 +571,12 @@ struct segTree {
 
 endsnippet
 snippet oset "Ordered Set" b
-#include <ext/pb_ds/detail/standard_policies.hpp>
 
-template<typename T>
-using ordered_set = tree<
-T,
-null_type,
-less<T>,
-rb_tree_tag,
-tree_order_statistics_node_update>;
+#include<ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds; 
 
+#define ordered_set tree<int, null_type,less<int>, rb_tree_tag,tree_order_statistics_node_update>
 endsnippet
 
 snippet DSU "Disjoint Set Union" b
@@ -566,14 +588,14 @@ struct DSU{
 	}
 	
 	int fnd(int u){
-		return (par[u] == -1) ? u : (par[u] = fnd(par[u]);
+		return (par[u] == -1) ? u : (par[u] = fnd(par[u]));
 	}
 
 	void un(int u, int v){
-		u = fnd(u), v = fnd(v)
+		u = fnd(u), v = fnd(v);
 		if(u == v)	return;
 		par[u] = v;
-		sz[v] += sz[u]
+		sz[v] += sz[u];
 	}
 };
 endsnippet
@@ -585,7 +607,7 @@ template<typename T_container, typename T = typename enable_if<!is_same<T_contai
 void dbg_out() { cerr << endl; }
 template<typename Head, typename... Tail> void dbg_out(Head H, Tail... T) { cerr << ' ' << H; dbg_out(T...); }
 #ifdef XOX
-#define deb(...) cerr << "(" << #__VA_ARGS__ << "):", dbg_out(__VA_ARGS__)
+#define deb(...) cerr << "(Line " << __LINE__ << ")" << " => " << "(" << #__VA_ARGS__ << "):", dbg_out(__VA_ARGS__)
 #else
 #define deb(...)
 #endif
@@ -697,13 +719,12 @@ endsnippet
 
 snippet fenwick-sum "Fenwick Tree for Sum Queries" b
 
-
 template<typename T>
 struct FenwickTree{
     vector<T> bit;
     int n;
  
-    FenwickTree(int num) : n(num), bit(num, (T)0){
+    FenwickTree(int num) : n(num + num), bit(num + num, (T)0){
     }
  
     T sum(int r){
@@ -726,8 +747,7 @@ struct FenwickTree{
         int cur = 20, pos = 0;
         T sum = 0;
         while(cur >= 0){
-            deb(pos, cur, bit[pos], (1 << cur) - 1, val);
-            if((pos + (1 << cur)) < n and (sum + bit[pos + (1 << cur)]) < val)    deb(pos + (1 << cur), bit[pos + (1 << cur)]), sum += bit[pos + (1 << cur)], pos += (1 << cur);
+            if((pos + (1 << cur)) < n and (sum + bit[pos + (1 << cur)]) < val)    sum += bit[pos + (1 << cur)], pos += (1 << cur);
             cur--;
         }
         return pos + 1;
@@ -737,7 +757,6 @@ struct FenwickTree{
         return lower_bound(val + ((T)1));
     }
 };
-
 endsnippet
 
 snippet aho-corasick "Aho Corasick Algorithm" b
@@ -1344,34 +1363,33 @@ mint C(int n, int k) {
 endsnippet
 
 snippet sparse-table "Sparse Table for Max queries" b
-struct SparseTable {
-	int N;
-	vector<vector<ll>> st;
-	vector<int> logn;
-	SparseTable(vector<ll> arr) {
-		N = arr.size() + 10;
-		st.clear();
-		logn.clear();
-		logn.resize(N);
-		logn[1] = 0;
-		int n = arr.size();
-		for(int i = 2; i < N; i++)	{
-			logn[i] = 1 + logn[i / 2];
+
+template <typename T, class F = function<T(const T&, const T&)>>
+class SparseTable {
+	public:
+		int n;
+		vector<vector<T>> mat;
+		F func;
+
+		SparseTable(const vector<T>& a, const F& f) : func(f) {
+			n = static_cast<int>(a.size());
+			int max_log = 32 - __builtin_clz(n);
+			mat.resize(max_log);
+			mat[0] = a;
+			for (int j = 1; j < max_log; j++) {
+				mat[j].resize(n - (1 << j) + 1);
+				for (int i = 0; i <= n - (1 << j); i++) {
+					mat[j][i] = func(mat[j - 1][i], mat[j - 1][i + (1 << (j - 1))]);
+				}
+			}
 		}
-		st.resize(N, vector<ll> (logn[n] + 3));
-		for(int i = 0; i < n; i++)	st[i][0] = arr[i];
-		for (int j = 1; j <= logn[n]; j++)
-			for (int i = 0; i + (1 << j) <= n; i++)
-				st[i][j] = max(st[i][j-1], st[i + (1 << (j - 1))][j - 1]);
-	}
 
-	ll query(int l, int r) {
-		if(l > r)	return 0;
-		int j = logn[r- l + 1];
-		return max(st[l][j], st[r - (1 << j) + 1][j]);
-	}
+		T get(int from, int to) const {
+			assert(0 <= from && from <= to && to <= n - 1);
+			int lg = 32 - __builtin_clz(to - from + 1) - 1;
+			return func(mat[lg][from], mat[lg][to - (1 << lg) + 1]);
+		}
 };
-
 endsnippet
 
 

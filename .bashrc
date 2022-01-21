@@ -135,6 +135,11 @@ export NVM_DIR="$HOME/.nvm"
  NPM_PACKAGES="${HOME}/.npm-packages"
 
 export PATH="$PATH:$NPM_PACKAGES/bin"
+export PATH="~/Desktop/idea-IU-212.4746.92/bin:$PATH"
+export  PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:/home/ashishanjan/Desktop/GoLand/GoLand-2021.2.3/
+#export GOPATH="$HOME/go_projects"
+#export GOBIN="$GOPATH/bin"
 
 # Preserve MANPATH if you already defined it somewhere in your config.
 # Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
